@@ -5,14 +5,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class FinanceManagerApp extends Application {  // Class name matches file name
+public class FinanceManagerApp extends Application {
+
     @Override
     public void start(Stage stage) throws Exception {
+
         FXMLLoader loader = new FXMLLoader(
                 FinanceManagerApp.class.getResource("/view/fxml/login.fxml")
         );
-        Scene scene = new Scene(loader.load(), 900, 600);
-        stage.setTitle("Fintrue - Personal Finance Manager");
+
+        Scene scene = new Scene(loader.load(), 400, 300);
+        stage.setTitle("Fintrue - Login");
         stage.setScene(scene);
         stage.show();
     }
