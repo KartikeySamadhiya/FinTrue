@@ -25,7 +25,7 @@ public class Transaction {
     public double getAmount() { return amount; }
     public String getType() { return type; }
 
-    public String getDate() {
+    public String getFormattedDate() {
         return date.format(DateTimeFormatter.ofPattern("MM dd"));
     }
 }
