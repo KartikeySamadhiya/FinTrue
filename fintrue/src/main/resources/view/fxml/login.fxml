@@ -19,5 +19,6 @@
         <TextField fx:id="emailField" promptText="Email"/>
         <PasswordField fx:id="passwordField" promptText="Password"/>
         <Button text="Login" onAction="#onLoginClicked"/>
+        <Button fx:id="registerButton" text="Register New Account" onAction="#onRegisterClicked" style="-fx-background-color: #4CAF50;"/>
     </children>
 </VBox>

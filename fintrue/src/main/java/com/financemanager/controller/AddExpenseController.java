@@ -1,6 +1,7 @@
 package com.financemanager.controller;
 
 import com.financemanager.domain.Transaction;
+import com.financemanager.repository.TransactionRepository;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,10 +15,16 @@ public class AddExpenseController {
     @FXML private TextField amountField;
     @FXML private Button saveButton;
 
+    private TransactionRepository transactionRepo;
+
     private DashboardController dashboardController;  // Reference to update charts
 
     public void setDashboardController(DashboardController controller) {
         this.dashboardController = controller;
+    }
+
+    public void setTransactionRepo(TransactionRepository repo) {
+        this.transactionRepo = repo;
     }
 
     @FXML
@@ -35,6 +42,8 @@ public class AddExpenseController {
         double amount = Double.parseDouble(amountField.getText());
 
         Transaction expense = new Transaction(desc,cat,amount, LocalDate.now(),"Expense");
+
+        transactionRepo.save(expense, LoginController.getCurrentUser().getId());
 
         dashboardController.addTransaction(expense);
 

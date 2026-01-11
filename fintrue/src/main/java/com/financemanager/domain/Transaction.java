@@ -26,6 +26,6 @@ public class Transaction {
     public String getType() { return type; }
 
     public String getFormattedDate() {
-        return date.format(DateTimeFormatter.ofPattern("MM dd"));
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

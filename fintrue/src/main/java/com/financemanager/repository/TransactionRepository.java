@@ -3,24 +3,38 @@ package com.financemanager.repository;
 import com.financemanager.domain.Transaction;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionRepository {
 
-    public void save(Transaction t){
-        String sql = " INSERT INTO transactions (description, category, amount, date, type) VALUES(?,?,?,?,?)";
+    public void save(Transaction t, long userId){
+        String sql = " INSERT INTO transactions (user_id, description, category, amount, date, type) VALUES(?,?,?,?,?,?)";
 
         try(Connection con = DatabaseManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)){
-            pstmt.setString(1, t.getDescription());
-            pstmt.setString(2, t.getCategory());
-            pstmt.setDouble(3, t.getAmount());
-            pstmt.setString(4, t.getFormattedDate().toString());
-            pstmt.setString(5, t.getType());
+            pstmt.setLong(1, userId);
+            pstmt.setString(2, t.getDescription());
+            pstmt.setString(3, t.getCategory());
+            pstmt.setDouble(4, t.getAmount());
+            pstmt.setString(5, t.getFormattedDate());
+            pstmt.setString(6, t.getType());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void delete(long id){
+        String sql = "DELETE FROM transactions WHERE id = ?" ;
+        try(Connection con = DatabaseManager.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql)){
+
+            pstmt.setLong(1,id);
+            pstmt.executeUpdate();
+        }catch (SQLException e){
+            System.err.println("Delete error: " + e.getMessage());
         }
     }
 

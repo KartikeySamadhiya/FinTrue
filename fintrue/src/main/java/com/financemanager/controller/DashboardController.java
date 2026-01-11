@@ -37,6 +37,7 @@ public class DashboardController {
 
         AddExpenseController controller = loader.getController();
         controller.setDashboardController(this);
+        controller.setTransactionRepo(transactionRepo);
 
         Stage modal = new Stage();
         modal.setScene(new Scene(root, 350, 300));
