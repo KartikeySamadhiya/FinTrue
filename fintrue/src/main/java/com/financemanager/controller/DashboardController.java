@@ -2,7 +2,9 @@ package com.financemanager.controller;
 import com.financemanager.domain.Transaction;
 import com.financemanager.repository.DatabaseManager;
 import com.financemanager.repository.TransactionRepository;
+import com.financemanager.util.DeleteButtonCell;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML ;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +20,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DashboardController {
     @FXML private Label totalBalanceLabel ;
@@ -28,7 +32,7 @@ public class DashboardController {
     @FXML private TableView<Transaction> transactionsTable;
     @FXML private TableColumn<?, ?> dateCol, descCol, categoryCol, amountCol;
 
-    private List<Transaction> transactions = new ArrayList<>();
+    private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
     private TransactionRepository transactionRepo = new TransactionRepository();
 
     @FXML private void onAddExpense() throws IOException {
@@ -64,6 +68,7 @@ public class DashboardController {
 
         transactions.add(t);
         transactionsTable.setItems(FXCollections.observableArrayList(transactions));
+        updatePieChart();
     }
 
     @FXML private void onLogout(){
@@ -81,28 +86,57 @@ public class DashboardController {
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
         amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
 
+        TableColumn<Transaction, Void> deleteCol = new TableColumn<>(" ");
+        deleteCol.setCellFactory(param -> new DeleteButtonCell(transactions, transactionRepo));
+        transactionsTable.getColumns().add(deleteCol);
+
         loadTransactions();
 
-        expensePieChart.getData().addAll(
-                new PieChart.Data("Food", 300),
-                new PieChart.Data("Transport", 150),
-                new PieChart.Data("Shopping", 95)
-        );
-        totalBalanceLabel.setText("$1,450");
-        totalExpensesLabel.setText("Expenses: $545");
-        totalIncomeLabel.setText("Income: $2,000");
+        totalBalanceLabel.setText("$0");
+        totalExpensesLabel.setText("Expenses: $0");
+        totalIncomeLabel.setText("Income: $0");
 
-        transactions.add(new Transaction("Lunch", "Food", 15.50, LocalDate.now(), "EXPENSE"));
-        transactions.add(new Transaction("Bus", "Transport", 2.00, LocalDate.now().minusDays(1), "EXPENSE"));
+        transactionsTable.setItems(transactions);
 
-        transactionsTable.setItems(FXCollections.observableArrayList(transactions));
+        updatePieChart();
     }
 
 
     private void loadTransactions() {
+        long currentUserId = LoginController.getCurrentUser().getId();
         transactions.clear();
-        transactions.addAll(transactionRepo.findAll());
-        transactionsTable.setItems(FXCollections.observableArrayList(transactions));
+        List<Transaction> allTransactions = transactionRepo.findByUserId(currentUserId);
+        for (Transaction t : allTransactions) {
+            t.setId(t.getId());
+            transactions.add(t);
+        }
     }
+
+    private void updatePieChart() {
+        expensePieChart.getData().clear();
+        Map<String, Double> categoryTotals = new HashMap<>();
+
+        System.out.println("Total transactions: " + transactions.size());
+
+        for (Transaction t : transactions) {
+            String type = t.getType();
+
+            if ("EXPENSE".equals(type)) {
+                categoryTotals.merge(t.getCategory(), t.getAmount(), Double::sum);
+                System.out.println("✅ Added " + t.getCategory() + ": " + t.getAmount());
+            }
+        }
+
+        System.out.println("Categories found: " + categoryTotals.size());
+
+        if (categoryTotals.isEmpty()) {
+            expensePieChart.getData().add(new PieChart.Data("No Expenses", 100));
+        } else {
+            categoryTotals.forEach((cat, amt) -> {
+                expensePieChart.getData().add(new PieChart.Data(cat, amt));
+            });
+        }
+    }
+
 
 }

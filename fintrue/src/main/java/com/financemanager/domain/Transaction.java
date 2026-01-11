@@ -28,4 +28,12 @@ public class Transaction {
     public String getFormattedDate() {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

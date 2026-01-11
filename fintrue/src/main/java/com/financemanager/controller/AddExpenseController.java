@@ -41,7 +41,7 @@ public class AddExpenseController {
         String cat  = categoryCombo.getValue();
         double amount = Double.parseDouble(amountField.getText());
 
-        Transaction expense = new Transaction(desc,cat,amount, LocalDate.now(),"Expense");
+        Transaction expense = new Transaction(desc,cat,amount, LocalDate.now(),"EXPENSE");
 
         transactionRepo.save(expense, LoginController.getCurrentUser().getId());
 

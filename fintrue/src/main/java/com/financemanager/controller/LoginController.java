@@ -25,7 +25,7 @@ public class LoginController {
         String password = passwordField.getText();
 
         User loggedInUser = UserRepository.authenticate(email, password);
-        // Demo login (replace with your SQL later)
+
         if (loggedInUser != null) {
             currentUser = loggedInUser;
             System.out.println("Login successful!");
@@ -35,7 +35,6 @@ public class LoginController {
             stage.setScene(dashboardScene);
             stage.setTitle("Fintrue - Dashboard");
         } else {
-            // Show error (add Alert later)
             System.out.println("Login failed");
         }
     }

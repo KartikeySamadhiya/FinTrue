@@ -54,6 +54,7 @@ public class TransactionRepository {
                         LocalDate.parse(rs.getString("date")),
                         rs.getString("type")
                 );
+                t.setId(rs.getLong("id"));
                 transactions.add(t);
             }
         }catch (SQLException e){
@@ -61,6 +62,31 @@ public class TransactionRepository {
         }
 
         return transactions;
+    }
+
+    public List<Transaction> findByUserId(long userId){
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT id, description, category, amount, date, type FROM transactions WHERE user_id = ?";
+        try(Connection conn = DatabaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setLong(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                Transaction t = new Transaction(
+                        rs.getString("description"),
+                        rs.getString("category"),
+                        rs.getDouble("amount"),
+                        LocalDate.parse(rs.getString("date")),
+                        rs.getString("type")
+                );
+                t.setId(rs.getLong("id"));
+                transactions.add(t);
+            }
+        }catch (SQLException e){
+            System.err.println("Load error: " + e.getMessage());
+        }
+        return transactions ;
     }
 
 }
