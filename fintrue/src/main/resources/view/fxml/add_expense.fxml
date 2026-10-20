@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
+
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.financemanager.controller.AddExpenseController"
       spacing="15" alignment="CENTER">
-    <padding><Insets top="30" right="30" bottom="30" left="30"/> </padding>
+    <padding><Insets top="25" right="30" bottom="25" left="30"/> </padding>
 
-    <Label text="Add Expense" style="-fx-font-size: 20px;"/>
+    <Label fx:id="titleLabel" text="Add Transaction" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-    <TextField fx:id="descField" promptText="Description"/>
-    <ComboBox fx:id="categoryCombo" promptText="Category"/>
-
-    <TextField fx:id="amountField" promptText="Amount ($)" />
+    <GridPane hgap="10" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints minWidth="80"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <Label text="Description:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="descField" promptText="e.g. Grocery, Salary" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Category:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoryCombo" promptText="Select Category" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Amount ($):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="amountField" promptText="0.00" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="datePicker" maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Cancel" onAction="#onCancel"/>
-        <Button fx:id="saveButton" text="Save" onAction="#onSave"/>
+        <Button text="Cancel" onAction="#onCancel" style="-fx-cursor: hand;"/>
+        <Button fx:id="saveButton" text="Save" onAction="#onSave"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
     </HBox>
 
 </VBox>
